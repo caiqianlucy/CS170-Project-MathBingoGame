@@ -1,16 +1,20 @@
 package teamlab;
 
-import java.awt.*;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.Window;
 
-
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 
 public class GameFrame extends JFrame{
 	public GameFrame() {
-		setTitle("Game name?");
-		setSize(356,300);
+		setTitle("CountGame");
+		setSize(800,800);
 		setResizable(false);
 		centerWindow(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
