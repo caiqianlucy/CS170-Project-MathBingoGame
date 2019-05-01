@@ -1,5 +1,6 @@
 package teamlab;
 
+import java.io.IOException;
 import java.util.*;
 
 public class GameInfo {
@@ -7,6 +8,26 @@ public class GameInfo {
 	boolean[][] tapped = new boolean[size][size];
 	String[][] ButtonResult = new String[size][size];
 	int ImageNum = 0;	//to store question which is number of image
+    
+	PlayerInfo players = new PlayerInfo();
+	public void addPlayer()
+	{		
+		players.addName();
+		//playerMap.put (players.getName(),players.getScore());
+	}
+	
+	public void checkPlayerScore() throws IOException {
+		players.checkScore();
+	}
+	
+	public void updatePlayerScore() {
+		players.updateScore();
+	}
+	
+	public void updateBingoScore(int s) {
+		players.bingoScore(s);
+	}
+	
 	public void SetImageNum()
 	{
 		//check duplicate

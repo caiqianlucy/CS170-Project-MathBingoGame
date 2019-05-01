@@ -1,0 +1,5 @@
+alex=40
+greggg=26
+lulu=22
+kate=15
+kay=12
