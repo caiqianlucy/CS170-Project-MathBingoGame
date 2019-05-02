@@ -12,16 +12,20 @@ import javax.swing.JPanel;
 
 
 public class GameFrame extends JFrame{
-	public GameFrame() {
+	//public boolean isBingo;
+	public GameFrame(int size, int range) {
+		//isBingo = false;
 		setTitle("CountGame");
-		setSize(800,800);
+		setSize(600,400);
 		setResizable(false);
 		centerWindow(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel panel = new GamePanel();		//Create the panel
+		GamePanel panel = new GamePanel(size, range);		//Create the panel
 		panel.setLayout(new FlowLayout());
 		panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		this.add(panel);
+		//if (panel.checkBingo()) isBingo = true;
+		
 	}
 	private void centerWindow(Window w)
 	{

@@ -8,37 +8,24 @@ import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements ActionListener{
-	GameInfo bingo = new GameInfo();
-	JButton[][]  matrix = new JButton[bingo.size][bingo.size];	//make space for buttons
-	JPanel Buttons,questions, imagePanel, scorePanel; //buttons place and questions place(include imagePanel and resultPanel)
+	GameInfo bingo;
+	JButton[][]  matrix;
+	JPanel Buttons,questions, imagePanel, scorePanel; //buttons place and questions place (including imagePanel and resultPanel)
 	JTextArea background;	//question's background
 	JButton results;
 	JTextField rightButtonTextField;
 	JLabel rightClickLabel;
-	int rightButton = 0;
-	int score = 0;
-	Clock clock = new Clock(); // record the time for the player to get bingo
-	
-	GamePanel()
-	{   
-		bingo.addPlayer();
-	    
-		bingo.SetButton();
-		bingo.SetImageNum();
-		//9 buttons of answers;
-		SetResultButton();
-		this.add(Buttons);
-		
-		//set questions
-		Setquestionboard();
-		this.add(questions);
-		//set button to check score
-		scoreResultButton();
-		this.add(scorePanel);
-		//turn on background music
-		String bgm = "sounds/ukulele.wav";
-		MusicPlayer.playMusic(bgm, false);
+	int rightButton;
+	Clock clock; // record the time for the player to get bingo
+	int size, range;
+
+	//GamePanel constructor
+	public GamePanel(int s, int r)
+	{   this.size = s;
+	    this.range = r;
+		startGame(size, range);
 	}
+	
 	//Method for player to check on scoreboard and scores for right attempt
 		public void scoreResultButton() {
 			scorePanel = new JPanel();
@@ -71,9 +58,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		imagePanel = new JPanel();
 		imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.PAGE_AXIS));
 		resetImagePanel();
-		questions.add(imagePanel);
-		
-		
+		questions.add(imagePanel);			
 	}
 	//reset the number of images for count
 	private void resetImagePanel() {
@@ -109,6 +94,50 @@ public class GamePanel extends JPanel implements ActionListener{
 		}
 		//Buttons.setSize(1000,1000);
 	}
+	// start the game
+	private void startGameWOMusicPlayer(int s, int r) {
+		bingo = new GameInfo(s, r);
+		clock = new Clock();
+		rightButton = 0;
+		matrix = new JButton[bingo.size][bingo.size];	//make space for buttons
+		bingo.addPlayer();
+	    
+		bingo.SetButton();
+		bingo.SetImageNum();
+		//9 buttons of answers;
+		SetResultButton();
+		this.add(Buttons);
+		
+		//set questions
+		Setquestionboard();
+		this.add(questions);
+		//set button to check score
+		scoreResultButton();
+		this.add(scorePanel);	
+	}
+	
+	private void startGame(int s, int r) {
+		startGameWOMusicPlayer(s, r);
+		//turn on background music
+		String bgm = "sounds/ukulele.wav";
+		MusicPlayer.playMusic(bgm, false);
+	}
+	
+	private void resetGame(int s, int r) {
+		this.removeAll();
+		this.revalidate();
+		this.repaint();
+		//JFrame parent = (JFrame) this.getRootPane().getParent();
+		//parent.dispose();
+		String choice = Validator.validateYN("Do you want to continue to play?y/n");
+		if (choice.equalsIgnoreCase("y")) {
+			startGameWOMusicPlayer(s, r);
+		}
+	}
+	public boolean checkBingo() {
+		return bingo.CheckBingo();
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{
 		Object source = e.getSource();
@@ -135,11 +164,11 @@ public class GamePanel extends JPanel implements ActionListener{
 							bingo.SetImageNum();	//reset image number
 							resetImagePanel();	//reset question
 							//check if bingo
-							if(bingo.CheckBingo()) {
+							if(checkBingo()) {
 								String bingoLocation = "sounds/bingo.wav";
 							    MusicPlayer.playMusic(bingoLocation,false);
 							    clock.stop();
-							    bingo.updateBingoScore(clock.sec);
+							    bingo.updateBingoScore(clock.sec, size);
 								//JOptionPane.showMessageDialog(null, "bingo！");
 							    try {
 									bingo.checkPlayerScore();
@@ -147,6 +176,8 @@ public class GamePanel extends JPanel implements ActionListener{
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
+							    if (size < 5) size++;
+							    resetGame(size, 9);
 						    }
 					    }
 						else	//else tell player wrong and swap back color

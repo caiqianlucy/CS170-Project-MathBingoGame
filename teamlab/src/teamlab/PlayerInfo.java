@@ -12,7 +12,7 @@ public class PlayerInfo{
 	
 	public void addName() {
 		
-		playerName = JOptionPane.showInputDialog(null,"What's your name?");		
+		playerName = Validator.validateName("What is your first name(Capital first letter)?");		
 	}
 
 	public int getScore() {
@@ -26,8 +26,8 @@ public class PlayerInfo{
 	}
 	
 	//Score when player achieves bingo
-	public void bingoScore(int time) {
-		score += 500/time;
+	public void bingoScore(int time, int size) {
+		score += (size-2)*50 + 500/time;
 	}
 	
 	public void readDirectory() throws IOException{
