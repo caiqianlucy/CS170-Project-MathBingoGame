@@ -8,12 +8,7 @@ public class PlayerInfo{
 	String name, playerName, scoreDisplay;
 	int score = 0;
 	String message ="Name" +"   " + "Score";
-	TreeMap<Integer, Set<String>> players = new TreeMap<Integer, Set<String>>(new Comparator<Integer>(){
-		public int compare(Integer a, Integer b) {
-			return b-a;
-		}
-	});
-	List<String> topFive;
+	HashMap<String, Integer> scoreMap = new HashMap<String, Integer>();
 	
 	public void addName() {
 		
@@ -35,21 +30,29 @@ public class PlayerInfo{
 		score += (size-2)*50 + 500/time;
 		//System.out.println(score);
 	}
-	// find the top five player info
-	public List<String> findTopFive(TreeMap<Integer, Set<String>> players){
-		List<String> res = new ArrayList<>();
-		int count = 0;
-		for (Integer s: players.keySet()) {
-			for (String player: players.get(s)) {
-				String info = player + " " + s;
-				res.add(info);
-				count++;
-				if (count == 5) return res;
-			}
-		}
-		return res;
-		
-	}
+	// function to sort hashmap by values 
+    public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) 
+    { 
+        // Create a list from elements of HashMap 
+        List<Map.Entry<String, Integer> > list = 
+               new LinkedList<Map.Entry<String, Integer> >(hm.entrySet()); 
+  
+        // Sort the list 
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() { 
+            public int compare(Map.Entry<String, Integer> o1,  
+                               Map.Entry<String, Integer> o2) 
+            { 
+                return (o2.getValue()).compareTo(o1.getValue()); 
+            } 
+        }); 
+          
+     // put data from sorted list to hashmap  
+        HashMap<String, Integer> temp = new LinkedHashMap<String, Integer>(); 
+        for (Map.Entry<String, Integer> element : list) { 
+            temp.put(element.getKey(), element.getValue()); 
+        } 
+        return temp; 
+    } 
 	
 	public void readDirectory() throws IOException{
 		//Create a file object
@@ -61,22 +64,21 @@ public class PlayerInfo{
 			name = entireLine[0]; 
 			scoreDisplay = entireLine[1];
 			int curScore = Integer.valueOf(scoreDisplay);
-			if (!players.containsKey(curScore)) players.put(curScore, new HashSet<String>());
-			players.get(curScore).add(name);
+			scoreMap.put(name, curScore);
 			line = in.readLine();
 		} //End of while
 		
 	    in.close();
-	    //Put current player's info into TreeMap
-	    if (!players.containsKey(score)) players.put(score, new HashSet<String>());
-	    players.get(score).add(playerName);
+	    //Put current player's info into HashMap only when for a new player or previous player with higher score
+	    if (!scoreMap.containsKey(playerName) || scoreMap.get(playerName) < score) scoreMap.put(playerName, score);
+
     }
 	
 
 	//Method for checking score and writing to file
 	public void checkScore() throws IOException{
 		readDirectory();
-		displaySortedMap();
+		displaySortedMap(scoreMap);
 
 	}//end of method
 	
@@ -84,13 +86,18 @@ public class PlayerInfo{
     /*This method passes the players' scores to sort by value, display results and write
 	to TopFiveScore text file*/
     
-	public void displaySortedMap() throws IOException {
-		topFive = findTopFive(players);
-		PrintWriter out = new PrintWriter(new FileWriter("TopFiveScore.txt", false));
-		for(String info: topFive ) {	
-		    out.println(info);
-			message = message + "\n" + info;
-		}
+	public void displaySortedMap(HashMap<String,Integer> map) throws IOException {
+		Map<String, Integer>sortedScore = sortByValue(map);
+		int count = 0;
+			PrintWriter out = new PrintWriter(new FileWriter("TopFiveScore.txt", false));
+			for(Map.Entry<String,Integer> element: sortedScore.entrySet()) {
+				if(count < 5) {
+				String info = element.getKey() + " " + element.getValue();
+				out.println(info);
+				message = message + "\n" + info;
+				count++;
+				}
+			}
 			out.close();
 		JOptionPane.showMessageDialog(null, message);		
 	}

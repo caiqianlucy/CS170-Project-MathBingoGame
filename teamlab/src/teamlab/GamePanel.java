@@ -138,8 +138,6 @@ public class GamePanel extends JPanel implements ActionListener{
 		String choice = Validator.validateYN("Do you want to play a new game?y/n");
 		if (choice.equalsIgnoreCase("y")) {
 			startGameWOMP(s, r);
-			bingo.addPlayer(); // add player for the first time
-			rightButton = 0;  // initiate rightButton
 		} else {
 			//JFrame parent = (JFrame) this.getRootPane().getParent();
 			//parent.dispose();
@@ -181,7 +179,7 @@ public class GamePanel extends JPanel implements ActionListener{
 							    MusicPlayer.playMusic(bingoLocation,false);
 							    clock.stop();
 							    bingo.updateBingoScore(clock.sec, size);
-								//JOptionPane.showMessageDialog(null, "bingo！");
+								JOptionPane.showMessageDialog(null, "bingo！Your score is "+ bingo.players.getScore());
 							    try {
 									bingo.checkPlayerScore();
 								} catch (IOException e1) {
@@ -191,7 +189,7 @@ public class GamePanel extends JPanel implements ActionListener{
 							    if (size < 5) {
 							    	size++;
 							    	continueGame(size, 9);							    	
-							    } else resetGame(size, 9);
+							    } else resetGame(3, 9);
 						    }
 					    }
 						else	//else tell player wrong and swap back color
