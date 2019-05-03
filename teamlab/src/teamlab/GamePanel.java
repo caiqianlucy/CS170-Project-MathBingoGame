@@ -27,20 +27,21 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	//Method for player to check on scoreboard and scores for right attempt
-		public void scoreResultButton() {
-			scorePanel = new JPanel();
-			results = new JButton("Check score:");
-			scorePanel.add(results);
-			results.addActionListener(this);
+	public void scoreResultButton() {
+		scorePanel = new JPanel();
+		results = new JButton("Check score:");
+		scorePanel.add(results);
+		results.addActionListener(this);
 			
-			rightClickLabel = new JLabel("Right: ");
-			scorePanel.add(rightClickLabel);
+		rightClickLabel = new JLabel("Right: ");
+		scorePanel.add(rightClickLabel);
 
-			rightButtonTextField = new JTextField(3);
-			rightButtonTextField.setEditable(false);
-			rightButtonTextField.setFocusable(false);
-			scorePanel.add(rightButtonTextField);	
-		}
+		rightButtonTextField = new JTextField(3);
+		rightButtonTextField.setEditable(false);
+		rightButtonTextField.setFocusable(false);
+		rightButtonTextField.setText(Integer.toString(rightButton));
+		scorePanel.add(rightButtonTextField);	
+	}
 	private void Setquestionboard()
 	{
 		//questions
@@ -94,16 +95,17 @@ public class GamePanel extends JPanel implements ActionListener{
 		}
 		//Buttons.setSize(1000,1000);
 	}
-	// start the game without music player and add player
-	private void startGameWOMPNP(int s, int r) {
+	// start the game without music player
+	private void startGameWOMP(int s, int r) {
 		bingo = new GameInfo(s, r);
 		clock = new Clock();
 		
 		matrix = new JButton[bingo.size][bingo.size];	//make space for buttons
-		
 	    
 		bingo.SetButton();
 		bingo.SetImageNum();
+		bingo.addPlayer(); // add player for the first time
+		rightButton = 0;  // initiate rightButton
 		//9 buttons of answers;
 		SetResultButton();
 		this.add(Buttons);
@@ -117,9 +119,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	private void startGame(int s, int r) {
-		startGameWOMPNP(s, r);
-		bingo.addPlayer(); // add player for the first time
-		rightButton = 0;  // initiate rightButton
+		startGameWOMP(s, r);		
 		//turn on background music
 		String bgm = "sounds/ukulele.wav";
 		MusicPlayer.playMusic(bgm, true);
@@ -128,7 +128,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		this.removeAll();
 		this.revalidate();
 		this.repaint();
-		startGameWOMPNP(s, r);
+		startGameWOMP(s, r);
 	}
 	
 	private void resetGame(int s, int r) {
@@ -137,12 +137,13 @@ public class GamePanel extends JPanel implements ActionListener{
 		this.repaint();
 		String choice = Validator.validateYN("Do you want to play a new game?y/n");
 		if (choice.equalsIgnoreCase("y")) {
-			startGameWOMPNP(s, r);
+			startGameWOMP(s, r);
 			bingo.addPlayer(); // add player for the first time
 			rightButton = 0;  // initiate rightButton
 		} else {
-			JFrame parent = (JFrame) this.getRootPane().getParent();
-			parent.dispose();
+			//JFrame parent = (JFrame) this.getRootPane().getParent();
+			//parent.dispose();
+			System.exit(0);
 		}
 	}
 	public boolean checkBingo() {
