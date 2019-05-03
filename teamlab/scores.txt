@@ -86,3 +86,8 @@ Alex 67
 Alex 60
 Alex 48
 Alex 37
+Roy 96
+Roy 125
+Roy 174
+Roy 173
+Emily 91

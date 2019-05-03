@@ -1,5 +1,5 @@
+Roy=173
+Emily=91
 alex=50
 Eric=45
 Lily=41
-Robert=38
-Alex=37

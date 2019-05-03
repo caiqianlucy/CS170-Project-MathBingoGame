@@ -132,6 +132,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		String choice = Validator.validateYN("Do you want to continue to play?y/n");
 		if (choice.equalsIgnoreCase("y")) {
 			startGameWOMusicPlayer(s, r);
+		} else {
+			JFrame parent = (JFrame) this.getRootPane().getParent();
+			parent.dispose();
 		}
 	}
 	public boolean checkBingo() {
