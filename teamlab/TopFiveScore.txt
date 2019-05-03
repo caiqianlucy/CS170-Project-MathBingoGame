@@ -1,5 +1,5 @@
+null=175
 Roy=173
-Emily=91
-alex=50
-Eric=45
-Lily=41
+null=125
+Emily=86
+Rose=82

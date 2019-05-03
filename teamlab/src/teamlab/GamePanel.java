@@ -94,13 +94,13 @@ public class GamePanel extends JPanel implements ActionListener{
 		}
 		//Buttons.setSize(1000,1000);
 	}
-	// start the game
-	private void startGameWOMusicPlayer(int s, int r) {
+	// start the game without music player and add player
+	private void startGameWOMPNP(int s, int r) {
 		bingo = new GameInfo(s, r);
 		clock = new Clock();
-		rightButton = 0;
+		
 		matrix = new JButton[bingo.size][bingo.size];	//make space for buttons
-		bingo.addPlayer();
+		
 	    
 		bingo.SetButton();
 		bingo.SetImageNum();
@@ -117,21 +117,29 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	private void startGame(int s, int r) {
-		startGameWOMusicPlayer(s, r);
+		startGameWOMPNP(s, r);
+		bingo.addPlayer(); // add player for the first time
+		rightButton = 0;  // initiate rightButton
 		//turn on background music
 		String bgm = "sounds/ukulele.wav";
-		MusicPlayer.playMusic(bgm, false);
+		MusicPlayer.playMusic(bgm, true);
+	}
+	private void continueGame(int s, int r) {
+		this.removeAll();
+		this.revalidate();
+		this.repaint();
+		startGameWOMPNP(s, r);
 	}
 	
 	private void resetGame(int s, int r) {
 		this.removeAll();
 		this.revalidate();
 		this.repaint();
-		//JFrame parent = (JFrame) this.getRootPane().getParent();
-		//parent.dispose();
-		String choice = Validator.validateYN("Do you want to continue to play?y/n");
+		String choice = Validator.validateYN("Do you want to play a new game?y/n");
 		if (choice.equalsIgnoreCase("y")) {
-			startGameWOMusicPlayer(s, r);
+			startGameWOMPNP(s, r);
+			bingo.addPlayer(); // add player for the first time
+			rightButton = 0;  // initiate rightButton
 		} else {
 			JFrame parent = (JFrame) this.getRootPane().getParent();
 			parent.dispose();
@@ -179,8 +187,10 @@ public class GamePanel extends JPanel implements ActionListener{
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-							    if (size < 5) size++;
-							    resetGame(size, 9);
+							    if (size < 5) {
+							    	size++;
+							    	continueGame(size, 9);							    	
+							    } else resetGame(size, 9);
 						    }
 					    }
 						else	//else tell player wrong and swap back color

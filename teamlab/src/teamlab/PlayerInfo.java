@@ -28,6 +28,7 @@ public class PlayerInfo{
 	//Score when player achieves bingo
 	public void bingoScore(int time, int size) {
 		score += (size-2)*50 + 500/time;
+		//System.out.println(score);
 	}
 	
 	public void readDirectory() throws IOException{
