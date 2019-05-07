@@ -99,7 +99,8 @@ public class PlayerInfo{
 				}
 			}
 			out.close();
-		JOptionPane.showMessageDialog(null, message);		
+		JOptionPane.showMessageDialog(null, message);
+		message = "Name" +"   " + "Score";
 	}
 	
 }//end of class

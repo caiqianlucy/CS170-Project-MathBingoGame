@@ -201,17 +201,18 @@ public class GamePanel extends JPanel implements ActionListener{
 							matrix[i][j].setIcon(new ImageIcon("images/tryAgain.png"));
 						}
 				   }
-				else if(source == results)
-				{
-					try {
-						bingo.checkPlayerScore();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}		
+				
+			}//for loop j
+		}//for loop i
+		if(source == results)
+		{
+			try {
+				bingo.checkPlayerScore();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		}
+		}		
 	}
 }
 
