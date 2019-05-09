@@ -123,7 +123,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			{   
 				//matrix[i][j] = new JButton(bingo.ButtonResult[i][j],setimage(bx/size , by/size ,button));
 				String button = buttons[Integer.valueOf(bingo.ButtonResult[i][j]) - 1];
-				matrix[i][j] = new JButton(bingo.ButtonResult[i][j],setimage(by/bingo.size , by/bingo.size, button));
+				matrix[i][j] = new JButton(setimage(by/bingo.size , by/bingo.size, button));
 				//matrix[i][j] = new JButton(bingo.ButtonResult[i][j],new ImageIcon(button));
 				Buttons.add(matrix[i][j]);	//push on to frame
 				//Display style
