@@ -71,15 +71,12 @@ public class PlayerInfo{
 	    in.close();
 	    //Put current player's info into HashMap only when for a new player or previous player with higher score
 	    if (!scoreMap.containsKey(playerName) || scoreMap.get(playerName) < score) scoreMap.put(playerName, score);
-
-    }
-	
+	}
 
 	//Method for checking score and writing to file
 	public void checkScore() throws IOException{
 		readDirectory();
 		displaySortedMap(scoreMap);
-
 	}//end of method
 	
 	
@@ -90,6 +87,7 @@ public class PlayerInfo{
 		Map<String, Integer>sortedScore = sortByValue(map);
 		int count = 0;
 			PrintWriter out = new PrintWriter(new FileWriter("TopFiveScore.txt", false));
+		
 			for(Map.Entry<String,Integer> element: sortedScore.entrySet()) {
 				if(count < 5) {
 				String info = element.getKey() + " " + element.getValue();
@@ -99,8 +97,7 @@ public class PlayerInfo{
 				}
 			}
 			out.close();
-		JOptionPane.showMessageDialog(null, message);
+		JOptionPane.showMessageDialog(null, message);	
 		message = "Name" +"   " + "Score";
 	}
-	
 }//end of class

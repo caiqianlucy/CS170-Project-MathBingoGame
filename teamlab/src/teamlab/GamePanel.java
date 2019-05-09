@@ -9,21 +9,45 @@ import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener{
 	GameInfo bingo;
+	PlayerInfo player;
 	JButton[][]  matrix;
-	JPanel Buttons,questions, imagePanel, scorePanel; //buttons place and questions place (including imagePanel and resultPanel)
-	JTextArea background;	//question's background
-	JButton results;
-	JTextField rightButtonTextField;
+	JPanel Buttons,Qboard, background, imagePanel, scorePanel; //buttons place and questions place (including imagePanel and resultPanel)
+	JTextArea question;	//question's background
+	JButton results;	
+	JTextField rightButtonTextField;	
 	JLabel rightClickLabel;
-	int rightButton;
 	Clock clock; // record the time for the player to get bingo
-	int size, range;
-
+	int size = 3, range = 9, framewidth,framelength;
+	//music path
+	String 	bgm = "sound/ukulele.wav",
+			Bingo = "sound/bingo.wav",
+			correct = "sound/correct.wav",
+			error = "sound/error.wav";
+	//image path
+	String 	reward = "images/haha.png";
+			//button = "images/original.png";
+	//set up image path for count
+	String[] counts = new String[] {
+			"images/f1.png", "images/f2.png", "images/f3.png", "images/f4.png",
+			"images/f5.png", "images/f6.png", "images/f7.png", "images/f8.png",
+			"images/f9.png"
+	};
+	//image path for button
+	String[] buttons = new String[] {
+			"images/1.png", "images/2.png", "images/3.png", "images/4.png",
+			"images/5.png", "images/6.png", "images/7.png", "images/8.png",
+			"images/9.png"
+	};
 	//GamePanel constructor
-	public GamePanel(int s, int r)
-	{   this.size = s;
-	    this.range = r;
+	public GamePanel(int x,int y)
+	{   
+		player = new PlayerInfo();
+	    this.framewidth = x;
+	    this.framelength = y;
+	    player.addName(); // add player for the first time
 		startGame(size, range);
+		//play background music
+		MusicPlayer.playMusic(bgm, true);
 	}
 	
 	//Method for player to check on scoreboard and scores for right attempt
@@ -33,124 +57,139 @@ public class GamePanel extends JPanel implements ActionListener{
 		scorePanel.add(results);
 		results.addActionListener(this);
 			
-		rightClickLabel = new JLabel("Right: ");
+		rightClickLabel = new JLabel("Score: ");
 		scorePanel.add(rightClickLabel);
 
-		rightButtonTextField = new JTextField(3);
+		rightButtonTextField = new JTextField(5);
 		rightButtonTextField.setEditable(false);
 		rightButtonTextField.setFocusable(false);
-		rightButtonTextField.setText(Integer.toString(rightButton));
+		rightButtonTextField.setText(Integer.toString(0));
 		scorePanel.add(rightButtonTextField);	
 	}
 	private void Setquestionboard()
 	{
 		//questions
-		questions = new JPanel();
-		questions.setLayout(new BoxLayout(questions, BoxLayout.PAGE_AXIS));
+		Qboard = new JPanel();
+		Qboard.setLayout(new BoxLayout(Qboard, BoxLayout.PAGE_AXIS));
 		//set up timer
 		clock.start();
-		questions.add(clock.clockLabel);
+		Qboard.add(clock.clockLabel);
+		//set background
+		background = new JPanel();
+		background.setPreferredSize(new Dimension(1*framewidth/4,4*framelength/5));
+		background.setBackground(Color.white);
 		//set up questions
-		background = new JTextArea(2,3);
-		background.setText("How many peguins are here?");
-		background.setEditable(false);
-		questions.add(background);	
+		question = new JTextArea();
+		question.setText("How many kinds of fruits are here?");
+		question.setPreferredSize(new Dimension(1*framewidth/4,30));
+		question.setEditable(false);
+		background.add(question);	
 		//add images
 		imagePanel = new JPanel();
-		imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.PAGE_AXIS));
+		imagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		imagePanel.setPreferredSize(new Dimension(1*framewidth/4,4*framelength/5 - 30));
 		resetImagePanel();
-		questions.add(imagePanel);			
+		background.add(imagePanel);
+		//background in board
+		Qboard.add(background);
 	}
 	//reset the number of images for count
 	private void resetImagePanel() {
 		imagePanel.removeAll();
 		imagePanel.revalidate();
 		imagePanel.repaint();
-		ImageIcon peguin = new ImageIcon("images/peguin.png");
-		//JOptionPane.showMessageDialog(null, ""+bingo.ImageNum);
-		for (int i = 0; i < bingo.ImageNum; i++) {
-			imagePanel.add(new JLabel(peguin));
-		}
+		imagePanel.setBackground(Color.white);
 		
+		for (int i = 0; i < bingo.ImageNum; i++) {
+			ImageIcon fruit = setimage(64, 64, counts[i]);
+			imagePanel.add(new JLabel(fruit));
+		}
 	}
+	//resize image with size needed
+	private ImageIcon setimage(int x , int y ,String path)
+	{
+		return new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(x, y,  Image.SCALE_DEFAULT));
+	}
+	//set up result button which is matrix on the left of frame
 	private void SetResultButton()
 	{
+		//button x and y
+		int bx = 2*framewidth/3, by = 4*framelength/5;
 		Buttons = new JPanel(new GridLayout(bingo.size, bingo.size));//set buttons Layout
+		Buttons.setPreferredSize(new Dimension(bx,by));	//set button panel size
 		for(int i = 0; i < bingo.size; i++) 
 		{
 			for(int j = 0; j < bingo.size; j++)
 			{   
-				ImageIcon original = new ImageIcon("images/original.png"); //origianl image
-				matrix[i][j] = new JButton(bingo.ButtonResult[i][j], original); 	//make new button with name and original image on it
+				//matrix[i][j] = new JButton(bingo.ButtonResult[i][j],setimage(bx/size , by/size ,button));
+				String button = buttons[Integer.valueOf(bingo.ButtonResult[i][j]) - 1];
+				matrix[i][j] = new JButton(bingo.ButtonResult[i][j],setimage(by/bingo.size , by/bingo.size, button));
+				//matrix[i][j] = new JButton(bingo.ButtonResult[i][j],new ImageIcon(button));
 				Buttons.add(matrix[i][j]);	//push on to frame
 				//Display style
 				matrix[i][j].setBackground(Color.BLUE);
-				//matrix[i][j].setForeground(Color.BLUE);
-				//matrix[i][j].setFocusPainted(false);
 				matrix[i][j].setOpaque(true);
 				matrix[i][j].setFont(new Font("Arial", Font.PLAIN, 40));
 				//event activity
 				matrix[i][j].addActionListener(this);
 			}
 		}
-		//Buttons.setSize(1000,1000);
 	}
-	// start the game without music player
-	private void startGameWOMP(int s, int r) {
+	//Operations
+	//start the game with everything set up
+	private void startGame(int s, int r) {
+		clean();
 		bingo = new GameInfo(s, r);
 		clock = new Clock();
-		
 		matrix = new JButton[bingo.size][bingo.size];	//make space for buttons
-	    
 		bingo.SetButton();
 		bingo.SetImageNum();
-		bingo.addPlayer(); // add player for the first time
-		rightButton = 0;  // initiate rightButton
 		//9 buttons of answers;
 		SetResultButton();
 		this.add(Buttons);
 		
 		//set questions
 		Setquestionboard();
-		this.add(questions);
+		this.add(Qboard);
 		//set button to check score
 		scoreResultButton();
 		this.add(scorePanel);	
 	}
-	
-	private void startGame(int s, int r) {
-		startGameWOMP(s, r);		
-		//turn on background music
-		String bgm = "sounds/ukulele.wav";
-		MusicPlayer.playMusic(bgm, true);
-	}
-	private void continueGame(int s, int r) {
-		this.removeAll();
-		this.revalidate();
-		this.repaint();
-		startGameWOMP(s, r);
-	}
-	
+	//ask user to play again
 	private void resetGame(int s, int r) {
-		this.removeAll();
-		this.revalidate();
-		this.repaint();
+		clean();
 		String choice = Validator.validateYN("Do you want to play a new game?y/n");
 		if (choice.equalsIgnoreCase("y")) {
-			startGameWOMP(s, r);
+			player = new PlayerInfo();
+			player.addName(); // add player for the first time
+			startGame(s, r);
 		} else {
 			//JFrame parent = (JFrame) this.getRootPane().getParent();
 			//parent.dispose();
 			System.exit(0);
 		}
 	}
-	public boolean checkBingo() {
-		return bingo.CheckBingo();
+	//clean frame
+	public void clean()
+	{
+		this.removeAll();
+		this.revalidate();
+		this.repaint();
 	}
-	
+	//Open rank board
+	public void OpenRankboard()
+	{
+		try {
+			player.checkScore();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	public void actionPerformed(ActionEvent e)
 	{
 		Object source = e.getSource();
+		int by = 4*framelength/5;
 		for(int i = 0; i < bingo.size; i++) 
 		{
 			for(int j = 0; j < bingo.size; j++)
@@ -162,57 +201,51 @@ public class GamePanel extends JPanel implements ActionListener{
 						//if correct change swap tapped[][] to true, reset image number, reset question, check bingo
 						if(Integer.valueOf(bingo.ButtonResult[i][j])==bingo.ImageNum)
 						{   
-							String musicLocation = "sounds/correct.wav";
-							MusicPlayer.playMusic(musicLocation,false);
-							rightButton += 1;
-							rightButtonTextField.setText(Integer.toString(rightButton));
-							bingo.updatePlayerScore();
-						    matrix[i][j].setIcon(new ImageIcon("images/haha.png"));
-							//JOptionPane.showMessageDialog(null, "correct!");
+							//play correct sound
+							MusicPlayer.playMusic(correct,false);
+							//update how many correct tapped and show to user
+							player.updateScore();
+							rightButtonTextField.setText(Integer.toString(player.getScore()));
+							//set correct reward
+						    matrix[i][j].setIcon(setimage(by/(2*bingo.size) , by/(2*bingo.size), reward));
 							bingo.tapped[i][j] = true;		//swap tapped place to true
 							bingo.ButtonResult[i][j] = Integer.toString(bingo.range+1);	//set the result to avoid duplicate
 							bingo.SetImageNum();	//reset image number
 							resetImagePanel();	//reset question
 							//check if bingo
-							if(checkBingo()) {
-								String bingoLocation = "sounds/bingo.wav";
-							    MusicPlayer.playMusic(bingoLocation,false);
+							if(bingo.CheckBingo()) {
+								//play bingo sound
+							    MusicPlayer.playMusic(Bingo,false);
 							    clock.stop();
-							    bingo.updateBingoScore(clock.sec, size);
-								JOptionPane.showMessageDialog(null, "bingo！Your score is "+ bingo.players.getScore());
-							    try {
-									bingo.checkPlayerScore();
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-							    if (size < 5) {
+						    	player.bingoScore(clock.sec, size);	
+							    //repeat game until to 5x5 matrix then check score
+							    if (size < 5) {		
+							    	JOptionPane.showMessageDialog(null, "bingo! congratuation your earned "+ player.getScore() + " score!");
+							    	//increase size
 							    	size++;
-							    	continueGame(size, 9);							    	
-							    } else resetGame(3, 9);
-						    }
+							    	//start with new size
+							    	startGame(size, 9);	
+							    } 
+							    else {
+							    	OpenRankboard();
+							    	resetGame(3, 9);
+							    }
+							}
 					    }
 						else	//else tell player wrong and swap back color
 						{   
-							//JOptionPane.showMessageDialog(null, "please try again!");
-							String errorLocation = "sounds/error.wav";
-							MusicPlayer.playMusic(errorLocation,false);
+							//play error sound
+							MusicPlayer.playMusic(error,false);
 							matrix[i][j].setBackground(Color.BLUE);
-							matrix[i][j].setIcon(new ImageIcon("images/tryAgain.png"));
 						}
 				   }
-				
+					
 			}//for loop j
 		}//for loop i
 		if(source == results)
 		{
-			try {
-				bingo.checkPlayerScore();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}		
+			OpenRankboard();
+		}	
 	}
 }
 

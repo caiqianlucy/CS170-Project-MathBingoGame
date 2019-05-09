@@ -12,25 +12,25 @@ import javax.swing.JPanel;
 
 
 public class GameFrame extends JFrame{
-	//public boolean isBingo;
-	public GameFrame(int size, int range) {
-		//isBingo = false;
+    Toolkit tk = Toolkit.getDefaultToolkit();
+    Dimension d = tk.getScreenSize();
+    int x = 2*d.width/3,y = 2*d.height/3;
+
+	public GameFrame() {
+
 		setTitle("CountGame");
-		setSize(600,400);
-		setResizable(false);
+		setSize(x,y);
+		setResizable(true);
 		centerWindow(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GamePanel panel = new GamePanel(size, range);		//Create the panel
+		GamePanel panel = new GamePanel(x,y);		//Create the panel
 		panel.setLayout(new FlowLayout());
 		panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		this.add(panel);
-		//if (panel.checkBingo()) isBingo = true;
 		
 	}
 	private void centerWindow(Window w)
 	{
-	    Toolkit tk = Toolkit.getDefaultToolkit();
-	    Dimension d = tk.getScreenSize();
 	    setLocation((d.width-w.getWidth())/2,
 	        (d.height-w.getHeight())/2);
 	}

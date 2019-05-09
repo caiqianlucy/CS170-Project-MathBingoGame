@@ -4,34 +4,17 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameInfo {
-	int size, range;	//the size of matrix and the range of random number
+	int size = 3, range = 9;	//the size of matrix and the range of random number
 	boolean[][] tapped;
 	String[][] ButtonResult;
 	int ImageNum = 0;	//to store question which is number of image
     
-	PlayerInfo players = new PlayerInfo();
 	//constructor to set size and range
 	public GameInfo(int s, int r) {
 		size = s;
 		range = r;
 		tapped = new boolean[size][size];
 		ButtonResult = new String[size][size];
-	}
-	public void addPlayer()
-	{		
-		players.addName();
-	}
-	
-	public void checkPlayerScore() throws IOException {
-		players.checkScore();
-	}
-	
-	public void updatePlayerScore() {
-		players.updateScore();
-	}
-	
-	public void updateBingoScore(int sec, int size) {
-		players.bingoScore(sec, size);
 	}
 	
 	public void SetImageNum()
