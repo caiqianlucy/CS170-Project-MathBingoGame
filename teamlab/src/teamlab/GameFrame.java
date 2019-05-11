@@ -14,11 +14,11 @@ import javax.swing.JPanel;
 public class GameFrame extends JFrame{
     Toolkit tk = Toolkit.getDefaultToolkit();
     Dimension d = tk.getScreenSize();
-    int x = 2*d.width/3,y = 2*d.height/3;
+    int x = 3*d.width/4,y = 3*d.height/4;
 
 	public GameFrame() {
 
-		setTitle("CountGame");
+		setTitle("CountAndBingo");
 		setSize(x,y);
 		setResizable(true);
 		centerWindow(this);

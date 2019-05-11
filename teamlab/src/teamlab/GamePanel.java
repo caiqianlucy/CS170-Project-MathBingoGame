@@ -11,11 +11,13 @@ public class GamePanel extends JPanel implements ActionListener{
 	GameInfo bingo;
 	PlayerInfo player;
 	JButton[][]  matrix;
-	JPanel Buttons,Qboard, background, imagePanel, scorePanel; //buttons place and questions place (including imagePanel and resultPanel)
+	JPanel Buttons,Qboard, background, imagePanel, scorePanel,playPanel; //buttons place and questions place (including imagePanel and resultPanel)
 	JTextArea question;	//question's background
-	JButton results;	
+	JButton results, playMethod;	
 	JTextField rightButtonTextField;	
 	JLabel rightClickLabel;
+	String instruction;
+	
 	Clock clock; // record the time for the player to get bingo
 	int size = 3, range = 9, framewidth,framelength;
 	//music path
@@ -55,17 +57,29 @@ public class GamePanel extends JPanel implements ActionListener{
 		scorePanel = new JPanel();
 		results = new JButton("Check score:");
 		scorePanel.add(results);
+		results.setFont(new Font("Arial", Font.PLAIN, 30));
 		results.addActionListener(this);
 			
 		rightClickLabel = new JLabel("Score: ");
+		rightClickLabel.setFont(new Font("Arial", Font.PLAIN, 30));
 		scorePanel.add(rightClickLabel);
 
 		rightButtonTextField = new JTextField(5);
 		rightButtonTextField.setEditable(false);
 		rightButtonTextField.setFocusable(false);
-		rightButtonTextField.setText(Integer.toString(0));
+		rightButtonTextField.setText(Integer.toString(player.getScore()));
+		rightButtonTextField.setFont(new Font("Arial", Font.PLAIN, 30));
 		scorePanel.add(rightButtonTextField);	
 	}
+	
+	public void howToPlay() {
+		playPanel = new JPanel();
+		playMethod = new JButton("How To Play");
+		playMethod.setFont(new Font("Arial", Font.PLAIN, 30));
+		playPanel.add(playMethod);
+		playMethod.addActionListener(this);
+	}
+	
 	private void Setquestionboard()
 	{
 		//questions
@@ -81,7 +95,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		//set up questions
 		question = new JTextArea();
 		question.setText("How many kinds of fruits are here?");
-		question.setPreferredSize(new Dimension(1*framewidth/4,30));
+		question.setFont(new Font("Arial", Font.PLAIN, 27));
+		question.setLineWrap(true);
+		question.setPreferredSize(new Dimension(1*framewidth/4,60));
 		question.setEditable(false);
 		background.add(question);	
 		//add images
@@ -154,6 +170,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		//set button to check score
 		scoreResultButton();
 		this.add(scorePanel);	
+		//set how to play instructions
+		howToPlay();
+		this.add(playPanel);
 	}
 	//ask user to play again
 	private void resetGame(int s, int r) {
@@ -218,9 +237,10 @@ public class GamePanel extends JPanel implements ActionListener{
 							    MusicPlayer.playMusic(Bingo,false);
 							    clock.stop();
 						    	player.bingoScore(clock.sec, size);	
+						    	JOptionPane.showMessageDialog(null, "bingo! Congratulations, you earned "+ player.getScore() + " score!");
 							    //repeat game until to 5x5 matrix then check score
 							    if (size < 5) {		
-							    	JOptionPane.showMessageDialog(null, "bingo! congratuation your earned "+ player.getScore() + " score!");
+							    	
 							    	//increase size
 							    	size++;
 							    	//start with new size
@@ -246,6 +266,18 @@ public class GamePanel extends JPanel implements ActionListener{
 		{
 			OpenRankboard();
 		}	
+		
+		if(source == playMethod)
+		{
+			instruction ="1. Count the number of fruits available on the right.\n" + 
+				"2. Find the matching number on the left.\n" + 
+				"3. Player who achieves bingo using the shortest time wins!";
+			JTextArea txtArea= new JTextArea("How To Play\n" + instruction);
+			txtArea.setFont(new Font("Arial", Font.PLAIN, 16));
+			txtArea.setLineWrap(true);
+			UIManager.put("OptionPane.minimumSize",new Dimension(410,200)); 
+			JOptionPane.showMessageDialog(null,txtArea);
+		}
 	}
 }
 
