@@ -3,6 +3,12 @@ import java.io.*;
 import javax.swing.JOptionPane;
 import java.util.*;
 
+
+/**
+ * @author Yiwen <br>
+ *PlayerInfo class stores player information including name and score for score
+ *display at the end of the game. 
+ */
 public class PlayerInfo{
 
 	String name, playerName, scoreDisplay;
@@ -10,27 +16,46 @@ public class PlayerInfo{
 	String message ="Name" +"   " + "Score";
 	HashMap<String, Integer> scoreMap = new HashMap<String, Integer>();
 	
+	/**
+	 * Adds player entry
+	 */
 	public void addName() {
 		
 		playerName = Validator.validateName("What is your first name(Capital first letter)?");		
 	}
 
+	
+	/**
+	 * Returns player score
+	 * @return score
+	 */
 	public int getScore() {
 		return score;
 	}
 	
-	//Score when player gets the right answer
+	
+	/**
+	 * Add score to original score when player submits right answer
+	 */
 	public void updateScore() {
 		score = score + 1;
 		
 	}
 	
-	//Score when player achieves bingo
+	/**
+	 * Updates score when player achieves bingo
+	 * @param time number of seconds used
+	 * @param size size of the game
+	 */
 	public void bingoScore(int time, int size) {
 		score += (size-2)*50 + 500/time;
-		//System.out.println(score);
 	}
-	// function to sort hashmap by values 
+	
+
+    /**Sorting function to sort hashmap by values
+     * @param hm hashmap that needs to be sorted
+     * @return temp sorted hashmap
+     */
     public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) 
     { 
         // Create a list from elements of HashMap 
@@ -54,6 +79,10 @@ public class PlayerInfo{
         return temp; 
     } 
 	
+    
+	/**Writes top 5 players of the game to new file 
+	 * @throws IOException
+	 */
 	public void readDirectory() throws IOException{
 		//Create a file object
 		File playerData = new File ("TopFiveScore.txt");
@@ -73,16 +102,21 @@ public class PlayerInfo{
 	    if (!scoreMap.containsKey(playerName) || scoreMap.get(playerName) < score) scoreMap.put(playerName, score);
 	}
 
-	//Method for checking score and writing to file
+	/**Checks player score and display scores
+	 * @throws IOException
+	 */
 	public void checkScore() throws IOException{
 		readDirectory();
 		displaySortedMap(scoreMap);
 	}//end of method
 	
 	
-    /*This method passes the players' scores to sort by value, display results and write
-	to TopFiveScore text file*/
     
+	/**This method passes the players' scores to sort by value, display results and write
+	 * to TopFiveScore text file
+	 * @param map
+	 * @throws IOException
+	 */
 	public void displaySortedMap(HashMap<String,Integer> map) throws IOException {
 		Map<String, Integer>sortedScore = sortByValue(map);
 		int count = 0;
@@ -90,7 +124,7 @@ public class PlayerInfo{
 		
 			for(Map.Entry<String,Integer> element: sortedScore.entrySet()) {
 				if(count < 5) {
-				String info = element.getKey() + " " + element.getValue();
+				String info = element.getKey() + "   " + element.getValue();
 				out.println(info);
 				message = message + "\n" + info;
 				count++;
@@ -98,6 +132,6 @@ public class PlayerInfo{
 			}
 			out.close();
 		JOptionPane.showMessageDialog(null, message);	
-		message = "Name" +"   " + "Score";
+		message = "Name" +"     " + "Score";
 	}
 }//end of class
