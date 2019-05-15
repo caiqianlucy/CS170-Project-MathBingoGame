@@ -1,8 +1,20 @@
 package teamlab;
-import java.io.*;
-import javax.swing.JOptionPane;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  * @author Yiwen <br>
@@ -13,7 +25,7 @@ public class PlayerInfo{
 
 	String name, playerName, scoreDisplay;
 	int score = 0;
-	String message ="Name" +"   " + "Score";
+	String message ="Rank" + "\t" + "Name" +"\t" + "Score";
 	HashMap<String, Integer> scoreMap = new HashMap<String, Integer>();
 	
 	/**
@@ -23,7 +35,6 @@ public class PlayerInfo{
 		
 		playerName = Validator.validateName("What is your first name(Capital first letter)?");		
 	}
-
 	
 	/**
 	 * Returns player score
@@ -32,7 +43,6 @@ public class PlayerInfo{
 	public int getScore() {
 		return score;
 	}
-	
 	
 	/**
 	 * Add score to original score when player submits right answer
@@ -49,10 +59,10 @@ public class PlayerInfo{
 	 */
 	public void bingoScore(int time, int size) {
 		score += (size-2)*50 + 500/time;
+		//System.out.println(score);
 	}
 	
-
-    /**Sorting function to sort hashmap by values
+	 /**Sorting function to sort hashmap by values
      * @param hm hashmap that needs to be sorted
      * @return temp sorted hashmap
      */
@@ -79,7 +89,6 @@ public class PlayerInfo{
         return temp; 
     } 
 	
-    
 	/**Writes top 5 players of the game to new file 
 	 * @throws IOException
 	 */
@@ -89,7 +98,7 @@ public class PlayerInfo{
 		BufferedReader in = new BufferedReader(new FileReader(playerData));
 		String line = in.readLine();
 		while(line != null) {
-			String[] entireLine = line.split(" ");
+			String[] entireLine = line.split("\t");
 			name = entireLine[0]; 
 			scoreDisplay = entireLine[1];
 			int curScore = Integer.valueOf(scoreDisplay);
@@ -111,7 +120,6 @@ public class PlayerInfo{
 	}//end of method
 	
 	
-    
 	/**This method passes the players' scores to sort by value, display results and write
 	 * to TopFiveScore text file
 	 * @param map
@@ -119,19 +127,20 @@ public class PlayerInfo{
 	 */
 	public void displaySortedMap(HashMap<String,Integer> map) throws IOException {
 		Map<String, Integer>sortedScore = sortByValue(map);
-		int count = 0;
+		int count = 1;
 			PrintWriter out = new PrintWriter(new FileWriter("TopFiveScore.txt", false));
 		
 			for(Map.Entry<String,Integer> element: sortedScore.entrySet()) {
-				if(count < 5) {
-				String info = element.getKey() + "   " + element.getValue();
+				if(count <= 5) {
+				String info = element.getKey() + "\t" + element.getValue();
 				out.println(info);
-				message = message + "\n" + info;
+				String rank = count + "\t" + info;
+				message = message + "\n" + rank;
 				count++;
 				}
 			}
 			out.close();
-		JOptionPane.showMessageDialog(null, message);	
-		message = "Name" +"     " + "Score";
+		JOptionPane.showMessageDialog(null, new JTextArea(message));	
+		message = "Rank" + "\t" + "Name" +"\t" + "Score";
 	}
 }//end of class

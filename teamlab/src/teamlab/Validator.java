@@ -1,41 +1,20 @@
 package teamlab;
 /* author@ Qian Cai
  * class title and section#: CS-170-01
- * the assignment: lab 4
+ * the assignment: Project
  * validator class
  */
-//Validation class with verification of integer with range, y/n and valid email address for using JOptionPane and try-catch mechanism
+//Validation class with  y/n and valid email address for using JOptionPane and try-catch mechanism
 
 
 import javax.swing.JOptionPane;
 
+
 public class Validator {
 	
-	public static int validateIntWithRange(String prompt, int min, int max) {
-		boolean isValid = false;
-		String strData = null;
-		int data = 0;
-
-		 while(!isValid) {
-		  try {
-	 		strData = JOptionPane.showInputDialog(prompt);
-			data = Integer.parseInt(strData);  //will automatically throw NumberFormat Exception	
-
-			if (data < min || data > max) 				//less than min
-					throw new Exception("Data is out of range " + min + " - " + max);		//Throw the exception
-			isValid = true;   //otherwise data is correct
-		  }		//End of try
-		catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "You must enter an integer and please try again...");
-		 }						//End of catch
-		catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e);
-		 }
-		} 						//End of while
-		return data;
-	 }	//End of validateIntWithRange()
-
-
+	/**
+	 * Validate yes or no options
+	 */
 	public static String validateYN(String prompt) {
 		boolean isValid = false; 
 		String choice = "";
@@ -55,6 +34,9 @@ public class Validator {
 		return choice;
 	}  //end of validateYN()
 	
+	/**
+	 * Validate name input
+	 */
 	public static String validateName(String prompt) {
 		boolean isValid = false; 
 		String name = "";

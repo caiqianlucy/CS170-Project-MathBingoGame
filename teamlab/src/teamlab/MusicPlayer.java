@@ -2,7 +2,6 @@ package teamlab;
 import java.io.*;
 import javax.sound.sampled.*;
 import javax.swing.*;
-
 /**
  * @author Yiwen <br>
  * This MusicPlayer class contains two methods that involves in playing all sound clips
@@ -12,7 +11,6 @@ import javax.swing.*;
 class MusicPlayer{
 	
 	static boolean changeVolume;
-	
 	/**
 	 * This method plays all music in the game. If the boolean variable evaluates to
 	 * true, then it calls the set volume method to adjust volume and loop music.

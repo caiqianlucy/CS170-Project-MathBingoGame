@@ -11,14 +11,21 @@ import javax.swing.JPanel;
 
 
 
+
+
 public class GameFrame extends JFrame{
     Toolkit tk = Toolkit.getDefaultToolkit();
     Dimension d = tk.getScreenSize();
-    int x = 3*d.width/4,y = 3*d.height/4;
-
+    int x = 3*d.width/4,y = 4*d.height/5;
+    
+    /**Constructor <br>
+     * Set up game frame and push panel on it
+     *
+     */
+    
 	public GameFrame() {
 
-		setTitle("CountAndBingo");
+		setTitle("CountGame");
 		setSize(x,y);
 		setResizable(true);
 		centerWindow(this);
@@ -29,6 +36,11 @@ public class GameFrame extends JFrame{
 		this.add(panel);
 		
 	}
+	
+	/**
+	 * This method sets frame to the center of the screen
+	 *
+	 */
 	private void centerWindow(Window w)
 	{
 	    setLocation((d.width-w.getWidth())/2,

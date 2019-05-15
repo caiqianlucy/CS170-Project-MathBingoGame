@@ -27,9 +27,15 @@ public class Clock {
 			//JOptionPane.showMessageDialog(null, s);
 		}
 	};
+	/**
+	 * Start the timer 
+	 */
 	public void start() {
 		timer.scheduleAtFixedRate(task, 1000, 1000);
 	}
+	/**
+	 * Stop the timer 
+	 */
 	public void stop() {
 		timer.cancel();
 	}

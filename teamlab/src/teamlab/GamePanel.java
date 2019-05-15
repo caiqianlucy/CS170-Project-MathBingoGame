@@ -1,22 +1,27 @@
 package teamlab;
-
+///*
+// * name: Qian Cai,Yuance Lin,Yiwen Moo
+// * class: CS170 #01
+// * due: 10:00 pm, Wednesday, May 15
+// * description: 
+// * 
+// */
 import java.awt.*;
-import javax.sound.sampled.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements ActionListener{
-	GameInfo bingo;
-	PlayerInfo player;
-	JButton[][]  matrix;
+	GameInfo bingo;		//gameinfo object
+	PlayerInfo player;	//playerinfo object
+	JButton[][]  matrix;	//a matrix of buttons
 	JPanel Buttons,Qboard, background, imagePanel, scorePanel,playPanel; //buttons place and questions place (including imagePanel and resultPanel)
 	JTextArea question;	//question's background
-	JButton results, playMethod;	
-	JTextField rightButtonTextField;	
+	JButton results, playMethod;	//two button below the game
+	JTextField rightButtonTextField;	//the textfield will display how many correct tapped
 	JLabel rightClickLabel;
-	String instruction;
+	String instruction;	//store the text on how to play
 	
 	Clock clock; // record the time for the player to get bingo
 	int size = 3, range = 9, framewidth,framelength;
@@ -40,7 +45,10 @@ public class GamePanel extends JPanel implements ActionListener{
 			"images/5.png", "images/6.png", "images/7.png", "images/8.png",
 			"images/9.png"
 	};
-	//GamePanel constructor
+	
+	/**
+	 * GamePanel constructor
+	 */
 	public GamePanel(int x,int y)
 	{   
 		player = new PlayerInfo();
@@ -52,7 +60,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		MusicPlayer.playMusic(bgm, true);
 	}
 	
-	//Method for player to check on scoreboard and scores for right attempt
+	/**Method for player to check on scoreboard and scores for right attempt
+	 * 
+	 */
 	public void scoreResultButton() {
 		scorePanel = new JPanel();
 		results = new JButton("Check score:");
@@ -67,11 +77,14 @@ public class GamePanel extends JPanel implements ActionListener{
 		rightButtonTextField = new JTextField(5);
 		rightButtonTextField.setEditable(false);
 		rightButtonTextField.setFocusable(false);
-		rightButtonTextField.setText(Integer.toString(player.getScore()));
+		rightButtonTextField.setText(Integer.toString(0));
 		rightButtonTextField.setFont(new Font("Arial", Font.PLAIN, 30));
 		scorePanel.add(rightButtonTextField);	
 	}
 	
+	/**
+	 * Display instructions to play the game
+	 */
 	public void howToPlay() {
 		playPanel = new JPanel();
 		playMethod = new JButton("How To Play");
@@ -80,6 +93,8 @@ public class GamePanel extends JPanel implements ActionListener{
 		playMethod.addActionListener(this);
 	}
 	
+	/**set up question board with styles
+	*/
 	private void Setquestionboard()
 	{
 		//questions
@@ -109,7 +124,10 @@ public class GamePanel extends JPanel implements ActionListener{
 		//background in board
 		Qboard.add(background);
 	}
-	//reset the number of images for count
+	
+	/**reset the number of images for count
+	 * 
+	 */
 	private void resetImagePanel() {
 		imagePanel.removeAll();
 		imagePanel.revalidate();
@@ -121,12 +139,15 @@ public class GamePanel extends JPanel implements ActionListener{
 			imagePanel.add(new JLabel(fruit));
 		}
 	}
-	//resize image with size needed
+	/**resize image with size needed
+	 * 
+	 */
 	private ImageIcon setimage(int x , int y ,String path)
 	{
 		return new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(x, y,  Image.SCALE_DEFAULT));
 	}
-	//set up result button which is matrix on the left of frame
+	/**set up result button which is matrix on the left of frame
+	*/
 	private void SetResultButton()
 	{
 		//button x and y
@@ -137,22 +158,20 @@ public class GamePanel extends JPanel implements ActionListener{
 		{
 			for(int j = 0; j < bingo.size; j++)
 			{   
-				//matrix[i][j] = new JButton(bingo.ButtonResult[i][j],setimage(bx/size , by/size ,button));
 				String button = buttons[Integer.valueOf(bingo.ButtonResult[i][j]) - 1];
 				matrix[i][j] = new JButton(setimage(by/bingo.size , by/bingo.size, button));
-				//matrix[i][j] = new JButton(bingo.ButtonResult[i][j],new ImageIcon(button));
-				Buttons.add(matrix[i][j]);	//push on to frame
+				Buttons.add(matrix[i][j]);
 				//Display style
-				matrix[i][j].setBackground(Color.BLUE);
+				matrix[i][j].setBackground(Color.PINK);
 				matrix[i][j].setOpaque(true);
-				matrix[i][j].setFont(new Font("Arial", Font.PLAIN, 40));
 				//event activity
 				matrix[i][j].addActionListener(this);
 			}
 		}
 	}
-	//Operations
-	//start the game with everything set up
+	/**Operations <br>
+	* start the game with everything set up
+	*/
 	private void startGame(int s, int r) {
 		clean();
 		bingo = new GameInfo(s, r);
@@ -174,7 +193,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		howToPlay();
 		this.add(playPanel);
 	}
-	//ask user to play again
+	
+	/**ask user to play again
+	*/
 	private void resetGame(int s, int r) {
 		clean();
 		String choice = Validator.validateYN("Do you want to play a new game?y/n");
@@ -188,14 +209,18 @@ public class GamePanel extends JPanel implements ActionListener{
 			System.exit(0);
 		}
 	}
-	//clean frame
+	
+	/**clean frame
+	*/
 	public void clean()
 	{
 		this.removeAll();
 		this.revalidate();
 		this.repaint();
 	}
-	//Open rank board
+	
+	/**Open rank board
+	*/
 	public void OpenRankboard()
 	{
 		try {
@@ -205,6 +230,10 @@ public class GamePanel extends JPanel implements ActionListener{
 			e1.printStackTrace();
 		}
 	}
+	
+	/** Reflects the actions
+	 *
+	 */
 	public void actionPerformed(ActionEvent e)
 	{
 		Object source = e.getSource();
@@ -237,10 +266,9 @@ public class GamePanel extends JPanel implements ActionListener{
 							    MusicPlayer.playMusic(Bingo,false);
 							    clock.stop();
 						    	player.bingoScore(clock.sec, size);	
-						    	JOptionPane.showMessageDialog(null, "bingo! Congratulations, you earned "+ player.getScore() + " score!");
 							    //repeat game until to 5x5 matrix then check score
 							    if (size < 5) {		
-							    	
+							    	JOptionPane.showMessageDialog(null, "bingo! Congratulations, you earned "+ player.getScore() + " score!");
 							    	//increase size
 							    	size++;
 							    	//start with new size
@@ -248,7 +276,8 @@ public class GamePanel extends JPanel implements ActionListener{
 							    } 
 							    else {
 							    	OpenRankboard();
-							    	resetGame(3, 9);
+							    	size = 3;
+							    	resetGame(size, 9);
 							    }
 							}
 					    }
@@ -256,7 +285,8 @@ public class GamePanel extends JPanel implements ActionListener{
 						{   
 							//play error sound
 							MusicPlayer.playMusic(error,false);
-							matrix[i][j].setBackground(Color.BLUE);
+							matrix[i][j].setBackground(Color.PINK);
+							JOptionPane.showMessageDialog(null, "","try again" ,0 ,new ImageIcon("images/try_again.jpg"));
 						}
 				   }
 					

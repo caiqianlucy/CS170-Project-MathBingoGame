@@ -9,14 +9,18 @@ public class GameInfo {
 	String[][] ButtonResult;
 	int ImageNum = 0;	//to store question which is number of image
     
-	//constructor to set size and range
+	/**
+	 * constructor to set size and range
+	 */
 	public GameInfo(int s, int r) {
 		size = s;
 		range = r;
 		tapped = new boolean[size][size];
 		ButtonResult = new String[size][size];
 	}
-	
+	/**
+	 * this function set amount of image number from ButtonResult include avoid duplicate
+	 */
 	public void SetImageNum()
 	{
 		//check duplicate
@@ -26,6 +30,10 @@ public class GameInfo {
 			ImageNum = Integer.valueOf(ButtonResult[col][row]);
 		}while(ImageNum == range+1);	//looping until not duplicate
 	}
+	
+	/**
+	 * this function full fill the value in ButtonResult array with random number
+	 */
 	public void SetButton()
 	{
 		int num = 0;
@@ -39,6 +47,9 @@ public class GameInfo {
 		}
 	}
 	
+	/**
+	 * this function check bingo for player and return true or false
+	 */
 	public boolean CheckBingo()
 	{
 		boolean colbingo,rowbingo,diagonal1 = true,diagonal2 = true;

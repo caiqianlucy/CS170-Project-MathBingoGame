@@ -1,5 +1,5 @@
-S 540
-So 420
-Sophia 384
-A 237
-Mary 181
+Philip	403
+S	381
+Qqq	92
+Wee	5
+Queen	2
